@@ -20,7 +20,7 @@ def get_quote():
                 quote_author = data['quoteAuthor'].strip() if data['quoteAuthor'] else "Unknown"
                 return f"{quote_text} - {quote_author}"
             time.sleep(2)
-        return "Failed to retrieve quote after multiple attempts."
+        
     except Exception as e:
         return f"An error occurred: {e}"
 
@@ -42,6 +42,6 @@ def main():
 
 
 
-        
+
 if __name__ == "__main__":
     main()
