@@ -44,14 +44,37 @@ def get_quote():
 
 def main():
     webhook_url = os.environ['DISCORD_WEBHOOK']
-    today = datetime.datetime.now().strftime("%B %d %Y")
-
+    today = datetime.datetime.now()
+    today_formatted = today.strftime("%B %d %Y")
+    
     quote = get_quote()
-    message = {
-        'content': f"A frase do dia para {today} é :\n\n{quote}"
-    }  
-    response = requests.post(webhook_url, json=message)
+    
 
+    if " - " in quote:
+        quote_text, quote_author = quote.rsplit(" - ", 1)
+    else:
+        quote_text, quote_author = quote, "Unknown"
+    
+
+    embed = {
+        "title": "🌟 Frase do Dia BECKA 🌟",
+        "description": f"*\"{quote_text}\"*",
+        "color": 15844367, 
+        "author": {
+            "name": quote_author
+        },
+        "footer": {
+            "text": f"{today_formatted}"
+        },
+        "timestamp": today.isoformat()
+    }
+    
+    message = {
+        "embeds": [embed]
+    }
+    
+    response = requests.post(webhook_url, json=message)
+    
     if response.status_code in [200, 204]:
         print("Quote sent successfully.")
     else:
