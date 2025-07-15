@@ -13,15 +13,19 @@ def get_quote():
         }
 
         for _ in range(3):
-            response = requests.post("https://api.forismatic.com/api/1.0", data=params)
-            if response.status_code == 200:
-                data = response.json()
-                quote_text = data['quoteText'].strip()
-                quote_author = data['quoteAuthor'].strip() if data['quoteAuthor'] else "Unknown"
-                return f"{quote_text} - {quote_author}"
+            try:
+                response = requests.post("https://api.forismatic.com/api/1.0", data=params)
+                if response.status_code == 200:
+                    data = response.json()
+                    quote_text = data['quoteText'].strip()
+                    quote_author = data['quoteAuthor'].strip() if data['quoteAuthor'] else "Unknown"
+                    return f"{quote_text} - {quote_author}"
+                print(f"API attempt failed with status code: {response.status_code}")
+            except Exception as e:
+                print(f"Request attempt error: {e}")
             time.sleep(2)
-        
     except Exception as e:
+        print(f"Unexpected error in get_quote: {e}")
         return f"An error occurred: {e}"
 
 
