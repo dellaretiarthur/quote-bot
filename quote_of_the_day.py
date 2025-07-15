@@ -1,7 +1,8 @@
 import requests
 import os
 import datetime
-import time 
+import time
+import random
 
 
 def get_quote():
@@ -14,7 +15,8 @@ def get_quote():
 
         for _ in range(3):
             try:
-                response = requests.post("https://api.forismatic.com/api/1.0", data=params)
+
+                response = requests.get("https://api.forismatic.com/api/1.0/", params=params)
                 if response.status_code == 200:
                     data = response.json()
                     quote_text = data['quoteText'].strip()
@@ -24,6 +26,17 @@ def get_quote():
             except Exception as e:
                 print(f"Request attempt error: {e}")
             time.sleep(2)
+            
+
+        fallback_quotes = [
+            "The only way to do great work is to love what you do. - Steve Jobs",
+            "Life is what happens when you're busy making other plans. - John Lennon",
+            "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+            "Simplicity is the ultimate sophistication. - Leonardo da Vinci",
+            "It does not matter how slowly you go as long as you do not stop. - Confucius"
+        ]
+        print("Using fallback quote after API attempts failed")
+        return random.choice(fallback_quotes)
     except Exception as e:
         print(f"Unexpected error in get_quote: {e}")
         return f"An error occurred: {e}"
